@@ -1170,7 +1170,7 @@ var D = [{
   "target": "味方全体",
   "condition": "常時",
   "description": "盾兵と弓兵の被ダメージ15%減少・与ダメージ15%増加（全軍で近似）",
-  "note": "",
+  "note": "盾兵弓兵限定",
   "source": "skill",
   "layer": "hero",
   "side": null
@@ -1190,7 +1190,7 @@ var D = [{
   "target": "味方全体",
   "condition": "常時",
   "description": "盾兵と弓兵の被ダメージ15%減少・与ダメージ15%増加（全軍で近似）",
-  "note": "",
+  "note": "盾兵弓兵限定",
   "source": "skill",
   "layer": "hero",
   "side": null
@@ -2897,7 +2897,7 @@ function App() {
 
   // 減衰スキルのターン平均EV計算
   function decayAvgEV(rawNumval, rawValue) {
-    var m = (rawValue || "").match(/\((\d+)%減衰\/(\d+)回\)/);
+    var m = (rawValue || "").match(/[（(](\d+)%減衰\/(\d+)回[）)]/);
     if (!m) return null;
     var decayRate = parseFloat(m[1]) / 100;
     var maxAtk = parseInt(m[2]);
@@ -2924,6 +2924,7 @@ function App() {
   // 兵種限定スキルに編成割合を適用
   function troopWeight(s) {
     var txt = (s.note || "") + (s.condition || "");
+    if (txt.includes("盾兵弓兵限定")) return ((form["盾兵"] || 0) + (form["弓兵"] || 0)) / 100;
     if (txt.includes("盾兵限定")) return (form["盾兵"] || 0) / 100;
     if (txt.includes("槍兵限定")) return (form["槍兵"] || 0) / 100;
     if (txt.includes("弓兵限定")) return (form["弓兵"] || 0) / 100;
@@ -2962,11 +2963,10 @@ function App() {
         }
       });
     });
-    // 乗り英雄: 遠征スキル1のうち攻撃系カテゴリのみ（防御系は除外）
-    var RIDER_ATK_CATS = new Set(["攻撃力バフ", "殺傷力バフ", "与ダメ上昇", "追加ダメージ", "被ダメ上昇", "攻撃力デバフ", "防御力デバフ"]);
+    // 乗り英雄: 遠征スキル1のみ（英雄スキル層に加算）
     riderTeam.forEach(function (h) {
       h.skills.filter(function (s) {
-        return s.skillSlot === "遠征スキル1" && s.source === "skill" && RIDER_ATK_CATS.has(s.category);
+        return s.skillSlot === "遠征スキル1" && s.source === "skill";
       }).forEach(function (s) {
         return hs.push(_objectSpread(_objectSpread({}, s), {}, {
           _h: h.name,
