@@ -3063,8 +3063,8 @@ function App() {
     // ・被ダメ↓・与ダメ↓ → Π(1-v) で乗算
     // ・与ダメ減少 → 敵の与ダメを下げる → 防御倍率に計上
     // ・攻撃力デバフ → 敵の攻撃力を下げる → 分子を減らす → 逆数 1/(1+v)
-    var hDef = 1 / (1 + r.h_def) * (1 / (1 + r.h_hp)) * r.h_td * r.h_ddp * r.h_dd * (1 / (1 + r.adb));
-    var gDef = 1 / (1 + r.g_def) * (1 / (1 + r.g_hp)) * r.g_td * r.g_ddp * r.g_dd;
+    var hDef = 1 / (1 + r.h_def) * (1 / (1 + r.h_hp)) * r.h_td * r.h_ddp * (1 / (1 + r.adb));
+    var gDef = 1 / (1 + r.g_def) * (1 / (1 + r.g_hp)) * r.g_td * r.g_ddp;
     r.defTotal = hDef * gDef;
     return r;
   }
